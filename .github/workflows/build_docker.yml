@@ -11,7 +11,7 @@ name: Create and publish a dev Docker image
 
 on:
   push:
-    branches: ['main','feat/rebase-rn']
+    branches: ['main','feat/rn-rebase']
 
 env:
   REGISTRY: ghcr.io
