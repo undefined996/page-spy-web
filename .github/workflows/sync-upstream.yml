@@ -1,20 +1,19 @@
-name: Weekly Sync Fork with Upstream
+name: Weekly Upstream Sync (No Push)
 
 on:
   schedule:
-    - cron: '0 3 * * 1'  # 每周一凌晨3点（UTC）运行，约北京时间11点
-  workflow_dispatch:     # 允许手动触发
+    - cron: '0 3 * * 1'  # 每周一 UTC 时间 03:00 执行（北京时间 11:00）
+  workflow_dispatch:      # 手动触发也支持
 
 jobs:
-  sync:
+  sync-only:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout current repo
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
-      - name: Set Git user
+    steps:
+      - name: Checkout current fork (undefined996/page-spy-web)
+        uses: actions/checkout@v4
+
+      - name: Set Git config
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -24,12 +23,7 @@ jobs:
           git remote add upstream https://github.com/HuolalaTech/page-spy-web.git
           git fetch upstream
 
-      - name: Merge upstream/main → fork/main
+      - name: Rebase from upstream/main (no push)
         run: |
           git checkout main
-          git merge upstream/main --allow-unrelated-histories -m "🔄 Weekly sync from upstream"
-      
-      - name: Push to fork (origin)
-        uses: ad-m/github-push-action@v0.8.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git rebase upstream/main
