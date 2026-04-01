@@ -1,6 +1,29 @@
 import offlineLogImg from '@/assets/image/screenshot/v1.9.2-offline-log-size.png';
 import harborRecordStatusImg from '@/assets/image/screenshot/harbor-record-status-zh.gif';
 
+## v2.4.6
+
+- 🆕 更新 `rrweb` 相关依赖到 `2.0.0-alpha.20` 版本;
+- 🐛 修复一些问题;
+
+## v2.4.5
+
+- 🆕 修复取消的网络请求的响应数据在详情面板中显示为 `"undefined"` 的问题，查看详情：https://github.com/HuolalaTech/page-spy-web/issues/390；
+
+## v2.4.4
+
+- 🆕 调整网络面板的交互；
+- 🐛 修复网络面板出现重复数据的问题，以及修复 `fetch` 的请求时长；
+
+## v2.4.3
+
+- 🐛 修复浏览器 SDK 逻辑，使 `socketStore.connectable` 状态与 `offline` 初始化选项关联;
+
+
+## v2.4.2
+
+- 🐛 修复浏览器 SDK 在页面切换到前台时自动重连的问题，查看详情：https://github.com/HuolalaTech/page-spy/pull/146;
+
 ## v2.4.1
 
 - 🐛 修复 SDK 的 WebSocket 插件无法正常工作的问题;

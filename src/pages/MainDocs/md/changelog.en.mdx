@@ -1,6 +1,28 @@
 import offlineLogImg from '@/assets/image/screenshot/v1.9.2-offline-log-size.png';
 import harborRecordStatusImg from '@/assets/image/screenshot/harbor-record-status-en.gif';
 
+## v2.4.6
+
+- 🆕 Updated `rrweb` related dependencies to `2.0.0-alpha.20` version;
+- 🐛 Fixed some issues;
+
+## v2.4.5
+
+- 🆕 Fixed the issue where the response data of cancelled network requests is displayed as `"undefined"` in the details panel, see details: https://github.com/HuolalaTech/page-spy-web/issues/390;
+
+## v2.4.4
+
+- 🆕 Adjusted the interactions in the Network panel;
+- 🐛 Fixed the issue of duplicate data appearing in the Network panel, and corrected the request duration for fetch.
+
+## v2.4.3
+
+- 🐛 Fix the logic of the browser SDK, making the `socketStore.connectable` state associated with the `offline` initialization option;
+
+## v2.4.2
+
+- 🐛 Fix the issue where the browser SDK automatically reconnect when the page is switched to the front-ground, see details: https://github.com/HuolalaTech/page-spy/pull/146;
+
 ## v2.4.1
 
 - 🐛 Fix the issue where the WebSocket plugin in the SDK cannot work normally;

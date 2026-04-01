@@ -1,6 +1,8 @@
 
 import { Tooltip } from 'antd'
 
+## 开始使用#start-using
+
 ### 第一步#step-1
 
 在待调试 HAP 目录下安装依赖：
@@ -30,7 +32,7 @@ export default class EntryAbility extends UIAbility {
     new PageSpy({
       context: this.context,
       api: "{deployPath}",
-      enableSSL: true,
+      enableSSL: {enableSSL},
       axios: axiosInstance
     })
   }

@@ -1,5 +1,7 @@
 import { Tooltip } from 'antd'
 
+## 使用を開始#start-using
+
 ### ステップ 1#step-1
 
 デバッグ対象のHAPディレクトリで依存関係をインストールします：
@@ -29,7 +31,7 @@ export default class EntryAbility extends UIAbility {
     new PageSpy({
       context: this.context,
       api: "{deployPath}",
-      enableSSL: true,
+      enableSSL: {enableSSL},
       axios: axiosInstance
     })
   }

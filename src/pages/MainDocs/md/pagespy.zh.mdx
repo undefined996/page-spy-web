@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 # PageSpy API
 
-## constructor()
+## constructor(config)#constructor
 
 创建一个 PageSpy 实例。
 
@@ -100,10 +100,18 @@ import { Link } from 'react-router-dom'
   
 ### config.disabledPlugins
 
-PageSpy 内置的插件都是开箱即用的，你可以手动指定禁用哪些插件。
+PageSpy 内置的插件都是开箱即用的，你可以通过插件名称手动指定禁用哪些插件。
 
 - 类型：`string[]`
+- 默认值：`[]`
+- 详细信息：在控制台打印 `PageSpy.pluginsWithOrder.map(i => i.name)` 查看所有插件名称。
+- 示例：
 
+  ```ts
+  new PageSpy({
+    disabledPlugins: ['ConsolePlugin', 'NetworkPlugin']
+  })
+  ```
 
 ### config.serializeData
 
@@ -454,7 +462,7 @@ PageSpy 内置的插件都是开箱即用的，你可以手动指定禁用哪些
   }
   ```
 
-### showPanel() <PlatformTag type="mp" />
+## showPanel() <PlatformTag type="mp" />
 
 在小程序环境中弹出调试面板。
 

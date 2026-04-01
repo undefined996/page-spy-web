@@ -1,9 +1,11 @@
 import { Tooltip } from 'antd'
+
+## 使用を開始#start-using
 import mpPanelImg from '@/assets/image/screenshot/mp-panel.png'
 
 ### ステップ 1#step-1
 
-プロジェクトに依存関係をインストールします。複数のミニプログラムプラットフォーム向けのSDKを提供しています。必要に応じてインストールしてください：
+プロジェクトに依存関係をインストールします。複数のミニプログラムプラットフォームのSDKを提供していますので、必要に応じてインストールしてください：
 
 :::code-group
 
@@ -28,7 +30,7 @@ yarn add @huolala-tech/page-spy-taro@latest
 
 ### ステップ 2#step-2
 
-PageSpyサービスのドメインをミニプログラムのhttp、websocketリクエストホワイトリストに追加します。開発環境以外では、ミニプログラムはhttpsとwssプロトコルの使用を強制することに注意してください：
+PageSpyサービスのドメインをミニプログラムのHTTP、WebSocketリクエストのホワイトリストに追加します。注意：開発環境を除き、ミニプログラムはHTTPSとWSSプロトコルの使用が必須です：
 
 ```
 https://<your-pagespy-host>
@@ -37,17 +39,51 @@ wss://<your-pagespy-host>
 
 ### ステップ 3#step-3
 
-エントリーファイルでSDKをインポートしてインスタンス化します。初期化パラメータには、SDKの動作をカスタマイズするためのオプションの[設定項目]({VITE_SDK_WECHAT_REPO})が用意されています：
+エントリーファイルでSDKをインポートしてインスタンス化します。[設定オプション]({VITE_SDK_WECHAT_REPO})を使用してSDKの動作をカスタマイズできます：
 
-```js
+:::code-group
+
+```js wechat
 import PageSpy from '@huolala-tech/page-spy-wechat';
 
 const $pageSpy = new PageSpy({
   api: "{deployPath}",
+  enableSSL: {enableSSL},
 })
 ```
 
-### デバッグメニュー#menus
+```js alipay
+import PageSpy from '@huolala-tech/page-spy-alipay';
+
+const $pageSpy = new PageSpy({
+  api: "{deployPath}",
+  enableSSL: {enableSSL},
+})
+```
+
+```js uniapp
+import PageSpy from '@huolala-tech/page-spy-uniapp';
+
+const $pageSpy = new PageSpy({
+  api: "{deployPath}",
+  enableSSL: {enableSSL},
+})
+```
+
+```js taro
+import PageSpy from '@huolala-tech/page-spy-taro';
+import Taro from '@tarojs/taro';
+
+const $pageSpy = new PageSpy({
+  taro: Taro,
+  api: "{deployPath}",
+  enableSSL: {enableSSL},
+})
+```
+
+:::
+
+## デバッグメニュー#menus
 
 作成したPageSpyインスタンスで`showPanel()`メソッドを呼び出すと、デバッグを補助するためのデバッグメニューがポップアップ表示されます：
 

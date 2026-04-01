@@ -1,6 +1,8 @@
 
 import { Tooltip } from 'antd'
 
+## 开始使用#start-using
+
 ### 第一步#step-1
 
 在项目中安装依赖：
@@ -19,13 +21,14 @@ npm install @huolala-tech/page-spy-react-native@latest
 
 ### 第二步#step-2
 
-在入口文件中引入 SDK 并实例化。 初始化参数提供了可选的 [配置项]({VITE_SDK_RN_REPO}) 用于自定义 SDK 的行为：
+在入口文件中引入 SDK 并实例化，可通过 [配置项]({VITE_SDK_RN_REPO}) 自定义 SDK 的行为：
 
 ```js
 import PageSpy from '@huolala-tech/page-spy-react-native';
 
 new PageSpy({
   api: "{deployPath}",
+  enableSSL: {enableSSL},
 })
 ```
 
@@ -38,6 +41,7 @@ import RNAsyncStoragePlugin from '@huolala-tech/page-spy-plugin-rn-async-storage
 PageSpy.registerPlugin(new RNAsyncStoragePlugin())
 new PageSpy({
   api: "{deployPath}",
+  enableSSL: {enableSSL},
 })
 ```
 
