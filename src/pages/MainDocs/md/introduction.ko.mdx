@@ -34,7 +34,9 @@ import networkImg from '@/assets/image/screenshot/network-panel.png';
 import pageImg from '@/assets/image/screenshot/page-panel.png';
 import storageImg from '@/assets/image/screenshot/storage-panel.png';
 import systemImg from '@/assets/image/screenshot/system-panel.png';
-import whyIsPageSpyImg from '@/assets/image/screenshot/why-is-pagespy-zh.png';
+import whyIsPageSpyImg from '@/assets/image/screenshot/pagespy-en.png';
+import onlineMode from '@/assets/image/screenshot/online-mode-en.png';
+import offlineMode from '@/assets/image/screenshot/offline-mode-en.png';
 import offlineImg from '@/assets/image/screenshot/offline-panel.png';
 
 export const githubUrl = import.meta.env.VITE_GITHUB_REPO;
@@ -76,6 +78,10 @@ PageSpy는 디버깅 기능을 제공하는 기반 위에서 **온라인 실시�
 
 ### 1. 온라인 실시간 디버깅#online-debugging
 
+<a href={onlineMode} target="_blank">
+  <img src={onlineMode} />
+</a>
+
 - Console 패널: `console.<log | info | warn | error | debug>`로 출력된 로그 정보를 표시하고, 클라이언트에 실행할 코드를 전송할 수 있습니다.
 
 <a href={consoleImg} target="_blank">
@@ -109,6 +115,10 @@ PageSpy는 디버깅 기능을 제공하는 기반 위에서 **온라인 실시�
 이 외에도, 새로운 데이터가 추가되거나 데이터가 변경될 때 실시간으로 알림을 받을 수 있습니다.
 
 ### 2. 오프라인 로그 재생#offline-debugging
+
+<a href={offlineMode} target="_blank">
+  <img src={offlineMode} />
+</a>
 
 <a href={offlineImg} target="_blank">
   <img src={offlineImg} />

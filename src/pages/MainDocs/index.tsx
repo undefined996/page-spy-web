@@ -55,15 +55,15 @@ const sidebar = [
         },
         doc: 'deploy-with-docker',
       },
-      {
-        label: {
-          zh: '使用 宝塔 部署',
-          en: 'Deploy with Baota',
-          ja: '宝塔を使用してデプロイ',
-          ko: 'Baota로 배포',
-        },
-        doc: 'deploy-with-baota',
-      },
+      // {
+      //   label: {
+      //     zh: '使用 宝塔 部署',
+      //     en: 'Deploy with Baota',
+      //     ja: '宝塔を使用してデプロイ',
+      //     ko: 'Baota로 배포',
+      //   },
+      //   doc: 'deploy-with-baota',
+      // },
       {
         label: {
           zh: '服务端配置',
@@ -122,6 +122,10 @@ const sidebar = [
           ko: '하모니 앱',
         },
         doc: 'harmony',
+      },
+      {
+        label: 'Lynx',
+        doc: 'lynx',
       },
     ],
   },

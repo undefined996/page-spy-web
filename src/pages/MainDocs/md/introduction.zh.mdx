@@ -38,7 +38,9 @@ import networkImg from '@/assets/image/screenshot/network-panel.png';
 import pageImg from '@/assets/image/screenshot/page-panel.png';
 import storageImg from '@/assets/image/screenshot/storage-panel.png';
 import systemImg from '@/assets/image/screenshot/system-panel.png';
-import whyIsPageSpyImg from '@/assets/image/screenshot/why-is-pagespy-zh.png';
+import whyIsPageSpyImg from '@/assets/image/screenshot/pagespy-zh.png';
+import onlineMode from '@/assets/image/screenshot/online-mode-zh.png';
+import offlineMode from '@/assets/image/screenshot/offline-mode-zh.png';
 import offlineImg from '@/assets/image/screenshot/offline-panel.png';
 
 export const githubUrl = import.meta.env.VITE_GITHUB_REPO;
@@ -102,6 +104,10 @@ PageSpy 在提供调试功能的基础上，扩展出 **在线实时调试** 和
 
 ### 1. 在线实时调试#online-debugging
 
+<a href={onlineMode} target="_blank">
+  <img src={onlineMode} />
+</a>
+
 - Console 面板: 显示 `console.<log | info | warn | error | debug>` 输出的日志信息，可以发送代码到客户端执行；
 
 <a href={consoleImg} target="_blank">
@@ -135,6 +141,10 @@ PageSpy 在提供调试功能的基础上，扩展出 **在线实时调试** 和
 除此之外，当有新数据产生或数据发生变化时，会实时地收到通知。
 
 ### 2. 离线日志回放#offline-debugging
+
+<a href={offlineMode} target="_blank">
+  <img src={offlineMode} />
+</a>
 
 <a href={offlineImg} target="_blank">
   <img src={offlineImg} />

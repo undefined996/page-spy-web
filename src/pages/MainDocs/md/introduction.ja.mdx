@@ -34,7 +34,9 @@ import networkImg from '@/assets/image/screenshot/network-panel.png';
 import pageImg from '@/assets/image/screenshot/page-panel.png';
 import storageImg from '@/assets/image/screenshot/storage-panel.png';
 import systemImg from '@/assets/image/screenshot/system-panel.png';
-import whyIsPageSpyImg from '@/assets/image/screenshot/why-is-pagespy-en.png';
+import whyIsPageSpyImg from '@/assets/image/screenshot/pagespy-en.png';
+import onlineMode from '@/assets/image/screenshot/online-mode-en.png';
+import offlineMode from '@/assets/image/screenshot/offline-mode-en.png';
 import offlineImg from '@/assets/image/screenshot/offline-panel.png';
 
 export const githubUrl = import.meta.env.VITE_GITHUB_REPO;
@@ -76,6 +78,10 @@ PageSpyはデバッグ機能を提供する基盤の上で、**オンライン�
 
 ### 1. オンラインリアルタイムデバッグ#online-debugging
 
+<a href={onlineMode} target="_blank">
+  <img src={onlineMode} />
+</a>
+
 - Consoleパネル: `console.<log | info | warn | error | debug>`で出力されたログ情報を表示し、クライアントに実行するコードを送信できます。
 
 <a href={consoleImg} target="_blank">
@@ -109,6 +115,10 @@ PageSpyはデバッグ機能を提供する基盤の上で、**オンライン�
 さらに、新しいデータが追加されたり、データが変更されたりした場合、リアルタイムで通知を受け取ることができます。
 
 ### 2. オフラインログリプレイ#offline-debugging
+
+<a href={offlineMode} target="_blank">
+  <img src={offlineMode} />
+</a>
 
 <a href={offlineImg} target="_blank">
   <img src={offlineImg} />

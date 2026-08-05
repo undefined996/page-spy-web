@@ -1,0 +1,115 @@
+## 시작하기#start-using
+
+### 1단계: 네이티브 WebSocket 모듈 등록#step-1
+
+PageSpy는 서버에 연결할 때 Lynx의 `NativeModules.LynxNativeWebSocketModule`을 우선적으로 사용합니다. 실제 Lynx Native 환경에서 실행되는 호스트 앱은 PageSpy를 초기화하기 전에 이 네이티브 모듈을 등록해야 합니다. 웹 미리보기 환경에서는 생성 가능한 `globalThis.WebSocket`으로 대체됩니다.
+
+네이티브 예제 코드는 [`native-examples/android`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/android), [`native-examples/ios`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/ios), [`native-examples/harmony`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/harmony)에서 확인할 수 있습니다.
+
+:::code-group
+
+```java android
+// Android는 OkHttp의 `WebSocketListener`를 사용합니다.
+// 호스트 앱에 OkHttp를 추가하거나 프로젝트에서 이미 사용 중인 WebSocket 클라이언트에 맞게 수정해야 합니다.
+LynxEnv.inst().registerModule(
+  "LynxNativeWebSocketModule",
+  LynxNativeWebSocketModule.class
+);
+```
+
+```objc ios
+[globalConfig registerModule:LynxNativeWebSocketModule.class];
+```
+
+```ts harmony
+// Harmony는 NetworkKit의 WebSocket API를 사용합니다.
+// 호스트 앱의 Harmony SDK가 다른 WebSocket import 경로를 사용하는 경우 NativeModule 계약은 그대로 유지하고 import만 변경하면 됩니다.
+import { LynxNativeWebSocketModule } from './module/LynxNativeWebSocketModule';
+
+this.modules.set('LynxNativeWebSocketModule', {
+  moduleClass: LynxNativeWebSocketModule,
+});
+```
+:::
+
+### 2단계: 네이티브 Console 모듈 등록#step-2
+
+Lynx Native 환경의 `console` 출력은 Lynx DevTool Inspector 파이프라인으로 전달되므로 JavaScript에서 `console.log`를 재정의하는 방식으로는 안정적으로 가로챌 수 없습니다. PageSpy는 `NativeModules.PageSpyConsoleModule`을 자동으로 감지하고 `drainMessages`를 호출하여 `LynxInspectorConsoleDelegate.onConsoleMessage(msg)`가 수신한 JSON 문자열을 가져옵니다.
+
+네이티브 예제 코드는 [`native-examples/android`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/android), [`native-examples/ios`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/ios), [`native-examples/harmony`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/harmony)에서 확인할 수 있습니다.
+
+- `PageSpyConsoleModule`: Console 메시지 큐를 저장하고 `drainMessages`를 통해 JavaScript에 반환합니다.
+- `PageSpyConsoleDelegate`: `LynxInspectorConsoleDelegate`를 구현하고 `onConsoleMessage(msg)`에서 수신한 메시지를 큐에 기록합니다.
+
+:::code-group
+
+```java android
+LynxEnv.inst().registerModule(
+  "PageSpyConsoleModule",
+  PageSpyConsoleModule.class
+);
+
+LynxBaseInspectorOwner owner = lynxView.getBaseInspectorOwner();
+if (owner != null) {
+  owner.setLynxInspectorConsoleDelegate(new PageSpyConsoleDelegate());
+}
+```
+
+```objc ios
+[globalConfig registerModule:PageSpyConsoleModule.class];
+
+id<LynxBaseInspectorOwner> owner = lynxView.baseInspectorOwner;
+if (owner) {
+  [PageSpyConsoleDelegate installWithInspectorOwner:owner];
+}
+```
+
+```ts harmony
+import { LynxView, LynxContext } from '@lynx/lynx';
+import { PageSpyConsoleModule } from './module/PageSpyConsoleModule';
+import { PageSpyConsoleDelegate } from './module/PageSpyConsoleDelegate';
+
+this.modules.set('PageSpyConsoleModule', {
+  moduleClass: PageSpyConsoleModule,
+});
+
+LynxView({
+  onCreate: (context: LynxContext) => {
+    const owner = context.getBaseInspectorOwner();
+    if (owner) {
+      PageSpyConsoleDelegate.installWithInspectorOwner(owner);
+    }
+  },
+});
+```
+:::
+
+호스트 앱에 이 Delegate를 연동하지 않아도 웹 환경이나 JavaScript의 `console`을 재정의할 수 있는 환경에서는 PageSpy가 계속 작동합니다. 하지만 Lynx Native Console 파이프라인의 제약으로 인해 iOS, Android 또는 Harmony 네이티브 환경에서는 Console 출력을 캡처하지 못할 수 있습니다.
+
+문제 해결 팁: iOS 로그에 `LynxNativeWebSocketModule.drainEvents`만 표시되고 `PageSpyConsoleModule.drainMessages`가 표시되지 않는다면 현재 LynxView가 `NativeModules.PageSpyConsoleModule`을 노출하지 않는 것입니다. WebSocket 모듈만 등록하면 PageSpy 연결은 가능하지만 네이티브 Console 출력은 캡처할 수 없습니다.
+
+### 3단계: 사용#step-3
+
+프로젝트에 의존성을 설치합니다:
+
+:::code-group
+
+```bash yarn
+yarn add @huolala-tech/page-spy-lynx@latest
+```
+
+```bash npm
+npm install @huolala-tech/page-spy-lynx@latest
+```
+
+:::
+
+진입점 파일에서 SDK를 import하고 인스턴스를 생성합니다. [설정 옵션]({VITE_SDK_LYNX_REPO})을 통해 SDK 동작을 사용자 지정할 수 있습니다:
+
+```ts
+import PageSpy from '@huolala-tech/page-spy-lynx';
+
+const pageSpy = new PageSpy({
+  api: 'example.com',
+});
+```

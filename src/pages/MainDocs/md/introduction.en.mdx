@@ -35,7 +35,9 @@ import networkImg from '@/assets/image/screenshot/network-panel.png';
 import pageImg from '@/assets/image/screenshot/page-panel.png';
 import storageImg from '@/assets/image/screenshot/storage-panel.png';
 import systemImg from '@/assets/image/screenshot/system-panel.png';
-import whyIsPageSpyImg from '@/assets/image/screenshot/why-is-pagespy-en.png';
+import whyIsPageSpyImg from '@/assets/image/screenshot/pagespy-en.png';
+import onlineMode from '@/assets/image/screenshot/online-mode-en.png';
+import offlineMode from '@/assets/image/screenshot/offline-mode-en.png';
 import offlineImg from '@/assets/image/screenshot/offline-panel.png';
 
 export const githubUrl = import.meta.env.VITE_GITHUB_REPO;
@@ -100,6 +102,10 @@ Based on providing debugging functionality, PageSpy extends into two scenarios: 
 
 ### 1. Online Real-time Debugging#online-debugging
 
+<a href={onlineMode} target="_blank">
+  <img src={onlineMode} />
+</a>
+
 - **Console Panel**: Displays logs from `console.<log | info | warn | error | debug>`, and allows sending code to be executed on the client side.
 
 <a href={consoleImg} target="_blank">
@@ -133,6 +139,10 @@ Based on providing debugging functionality, PageSpy extends into two scenarios: 
 Additionally, you will receive real-time notifications when new data is available or existing data changes.
 
 ### 2. Offline Log Replay#offline-debugging
+
+<a href={offlineMode} target="_blank">
+  <img src={offlineMode} />
+</a>
 
 <a href={offlineImg} target="_blank">
   <img src={offlineImg} />

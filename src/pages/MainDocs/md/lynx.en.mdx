@@ -1,0 +1,115 @@
+## Getting Started#start-using
+
+### Step 1: Register the Native WebSocket Module#step-1
+
+When connecting to the server, PageSpy prioritizes Lynx's `NativeModules.LynxNativeWebSocketModule`. The host app running in an actual Lynx Native environment should register this native module before initializing PageSpy. The web preview runtime falls back to a constructible `globalThis.WebSocket`.
+
+Native example code is available in [`native-examples/android`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/android), [`native-examples/ios`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/ios), and [`native-examples/harmony`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/harmony).
+
+:::code-group
+
+```java android
+// Android uses OkHttp's `WebSocketListener`.
+// The host app must include OkHttp or adapt the example to use the WebSocket client already available in the project.
+LynxEnv.inst().registerModule(
+  "LynxNativeWebSocketModule",
+  LynxNativeWebSocketModule.class
+);
+```
+
+```objc ios
+[globalConfig registerModule:LynxNativeWebSocketModule.class];
+```
+
+```ts harmony
+// Harmony uses NetworkKit's WebSocket API.
+// If the host app's Harmony SDK uses a different WebSocket import path, simply replace the import while keeping the NativeModule contract unchanged.
+import { LynxNativeWebSocketModule } from './module/LynxNativeWebSocketModule';
+
+this.modules.set('LynxNativeWebSocketModule', {
+  moduleClass: LynxNativeWebSocketModule,
+});
+```
+:::
+
+### Step 2: Register the Native Console Module#step-2
+
+In the Lynx Native runtime, `console` output is sent through the Lynx DevTool inspector pipeline and cannot reliably be intercepted by overriding `console.log` in JavaScript. PageSpy automatically detects `NativeModules.PageSpyConsoleModule` and calls `drainMessages` to retrieve the JSON strings received by `LynxInspectorConsoleDelegate.onConsoleMessage(msg)`.
+
+Native example code is available in [`native-examples/android`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/android), [`native-examples/ios`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/ios), and [`native-examples/harmony`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/harmony).
+
+- `PageSpyConsoleModule`: Stores the console message queue and returns the messages to JavaScript through `drainMessages`.
+- `PageSpyConsoleDelegate`: Implements `LynxInspectorConsoleDelegate` and writes messages to the queue in `onConsoleMessage(msg)`.
+
+:::code-group
+
+```java android
+LynxEnv.inst().registerModule(
+  "PageSpyConsoleModule",
+  PageSpyConsoleModule.class
+);
+
+LynxBaseInspectorOwner owner = lynxView.getBaseInspectorOwner();
+if (owner != null) {
+  owner.setLynxInspectorConsoleDelegate(new PageSpyConsoleDelegate());
+}
+```
+
+```objc ios
+[globalConfig registerModule:PageSpyConsoleModule.class];
+
+id<LynxBaseInspectorOwner> owner = lynxView.baseInspectorOwner;
+if (owner) {
+  [PageSpyConsoleDelegate installWithInspectorOwner:owner];
+}
+```
+
+```ts harmony
+import { LynxView, LynxContext } from '@lynx/lynx';
+import { PageSpyConsoleModule } from './module/PageSpyConsoleModule';
+import { PageSpyConsoleDelegate } from './module/PageSpyConsoleDelegate';
+
+this.modules.set('PageSpyConsoleModule', {
+  moduleClass: PageSpyConsoleModule,
+});
+
+LynxView({
+  onCreate: (context: LynxContext) => {
+    const owner = context.getBaseInspectorOwner();
+    if (owner) {
+      PageSpyConsoleDelegate.installWithInspectorOwner(owner);
+    }
+  },
+});
+```
+:::
+
+If the host app does not integrate this delegate, PageSpy will still work in web environments and JavaScript environments where `console` can be overridden. However, it may not capture console output in native iOS, Android, or Harmony environments due to limitations in the Lynx Native console pipeline.
+
+Troubleshooting tip: If the iOS logs show only `LynxNativeWebSocketModule.drainEvents` but not `PageSpyConsoleModule.drainMessages`, the current LynxView does not expose `NativeModules.PageSpyConsoleModule`. Registering only the WebSocket module ensures that PageSpy can connect, but it does not enable native console capture.
+
+### Step 3: Usage#step-3
+
+Install the dependency in your project:
+
+:::code-group
+
+```bash yarn
+yarn add @huolala-tech/page-spy-lynx@latest
+```
+
+```bash npm
+npm install @huolala-tech/page-spy-lynx@latest
+```
+
+:::
+
+Import and instantiate the SDK in your entry file. You can customize the SDK's behavior through the [configuration options]({VITE_SDK_LYNX_REPO}):
+
+```ts
+import PageSpy from '@huolala-tech/page-spy-lynx';
+
+const pageSpy = new PageSpy({
+  api: 'example.com',
+});
+```

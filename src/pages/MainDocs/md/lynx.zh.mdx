@@ -1,0 +1,115 @@
+## 开始使用#start-using
+
+### 第一步：注册原生 WebSocket 模块#step-1
+
+PageSpy 自身连接服务端时会优先使用 Lynx `NativeModules.LynxNativeWebSocketModule`。真实 Lynx Native 运行时的宿主 App 应在初始化 PageSpy 前注册该原生模块；web 预览运行时会回退到可构造的 `globalThis.WebSocket`。
+
+原生示例代码位于 [`native-examples/android`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/android)、[`native-examples/ios`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/ios) 和 [`native-examples/harmony`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/harmony)。
+
+
+:::code-group
+
+```java android
+// Android 使用 OkHttp 的 `WebSocketListener`
+// 宿主 App 需要引入 OkHttp，或改造成项目已有的 WebSocket 客户端。
+LynxEnv.inst().registerModule(
+  "LynxNativeWebSocketModule",
+  LynxNativeWebSocketModule.class
+);
+```
+
+```objc ios
+[globalConfig registerModule:LynxNativeWebSocketModule.class];
+```
+
+```ts harmony
+// Harmony 使用 NetworkKit 的 WebSocket API；
+// 如果宿主 Harmony SDK 使用不同的 WebSocket 导入路径，只需要替换 import，保持 NativeModule 契约不变。
+import { LynxNativeWebSocketModule } from './module/LynxNativeWebSocketModule';
+
+this.modules.set('LynxNativeWebSocketModule', {
+  moduleClass: LynxNativeWebSocketModule,
+});
+```
+:::
+
+### 第二步：注册原生 Console 模块#step-2
+
+Lynx native 运行时的 `console` 会进入 Lynx DevTool inspector 管道，不能保证能通过 JS 覆盖 `console.log` 拦截。PageSpy 会自动检测 `NativeModules.PageSpyConsoleModule`，并通过 `drainMessages` 拉取 `LynxInspectorConsoleDelegate.onConsoleMessage(msg)` 收到的 JSON 字符串。
+
+原生示例代码位于 [`native-examples/android`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/android)、[`native-examples/ios`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/ios) 和 [`native-examples/harmony`](https://github.com/HuolalaTech/page-spy/tree/main/packages/page-spy-lynx/native-examples/harmony)。
+- `PageSpyConsoleModule`：保存 console 消息队列，并通过 `drainMessages` 返回给 JS。
+- `PageSpyConsoleDelegate`：实现 `LynxInspectorConsoleDelegate`，在 `onConsoleMessage(msg)` 中写入队列。
+
+:::code-group
+
+```java android
+LynxEnv.inst().registerModule(
+  "PageSpyConsoleModule",
+  PageSpyConsoleModule.class
+);
+
+LynxBaseInspectorOwner owner = lynxView.getBaseInspectorOwner();
+if (owner != null) {
+  owner.setLynxInspectorConsoleDelegate(new PageSpyConsoleDelegate());
+}
+```
+
+```objc ios
+[globalConfig registerModule:PageSpyConsoleModule.class];
+
+id<LynxBaseInspectorOwner> owner = lynxView.baseInspectorOwner;
+if (owner) {
+  [PageSpyConsoleDelegate installWithInspectorOwner:owner];
+}
+```
+
+```ts harmony
+import { LynxView, LynxContext } from '@lynx/lynx';
+import { PageSpyConsoleModule } from './module/PageSpyConsoleModule';
+import { PageSpyConsoleDelegate } from './module/PageSpyConsoleDelegate';
+
+this.modules.set('PageSpyConsoleModule', {
+  moduleClass: PageSpyConsoleModule,
+});
+
+LynxView({
+  onCreate: (context: LynxContext) => {
+    const owner = context.getBaseInspectorOwner();
+    if (owner) {
+      PageSpyConsoleDelegate.installWithInspectorOwner(owner);
+    }
+  },
+});
+```
+:::
+
+如果宿主 App 没有接入该 delegate，PageSpy 仍会在 Web/可覆写 JS console 环境下工作，但 iOS/Android/Harmony native 上可能捕获不到 console；这是 Lynx native console 管道的限制。
+
+排查提示：如果 iOS 日志里只看到 `LynxNativeWebSocketModule.drainEvents`，但没有看到 `PageSpyConsoleModule.drainMessages`，说明当前 LynxView 没有暴露 `NativeModules.PageSpyConsoleModule`。只注册 WebSocket 模块只能保证 PageSpy 连接可用，不能捕获 native console。
+
+### 第三步：使用#step-3
+
+在项目中安装依赖：
+
+:::code-group
+
+```bash yarn
+yarn add @huolala-tech/page-spy-lynx@latest
+```
+
+```bash npm
+npm install @huolala-tech/page-spy-lynx@latest
+```
+
+:::
+
+在入口文件中引入 SDK 并实例化，可通过 [配置项]({VITE_SDK_LYNX_REPO}) 自定义 SDK 的行为：
+
+```ts
+import PageSpy from '@huolala-tech/page-spy-lynx';
+
+const pageSpy = new PageSpy({
+  api: 'example.com',
+});
+```

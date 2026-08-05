@@ -14,6 +14,8 @@ import HarmonySvg from '@/assets/image/harmony.svg?react';
 import TaroSvg from '@/assets/image/taro.svg?react';
 import NodeSvg from '@/assets/image/nodejs.svg?react';
 import DockerSvg from '@/assets/image/docker.svg?react';
+import AndroidSvg from '@/assets/image/android.svg?react';
+import IosSvg from '@/assets/image/apple.svg?react';
 import { CodeBlock, GroupItem } from '@/components/CodeBlock';
 import { useTranslation } from 'react-i18next';
 import { Lang } from 'shiki';
@@ -42,7 +44,9 @@ type MetaType =
   | 'harmony'
   | 'taro'
   | 'node'
-  | 'docker';
+  | 'docker'
+  | 'android'
+  | 'ios';
 
 interface Item {
   lang: string;
@@ -132,6 +136,14 @@ export const CodeGroup = ({ items = [] }: { items: Item[] }) => {
       docker: {
         icon: DockerSvg,
         name: 'Docker',
+      },
+      android: {
+        icon: AndroidSvg,
+        name: 'Android',
+      },
+      ios: {
+        icon: IosSvg,
+        name: 'iOS',
       },
     };
     return items.map((item) => {
